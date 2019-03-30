@@ -1,3 +1,14 @@
 I needed Python bindings for https://github.com/libpwquality/libpwquality that I could install via
 pip.  This started me down the path of looking at ctypes and cffi to see how those two could be used
 to write bindings for a C library.
+
+The files here are not intended as complete implementations of libpwquality bindings but to get a
+sense of how bindings written using the Python C-API, ctypes, and cffi compare to each other.
+
+Files
+=====
+
+* pwquality.c:  The current version of the bindings extracted from the upstream source.  This would
+  be built with the python distutils command for building extension modules
+* ctypes_pwq.py: Bindings that cover PWQError, creating a PWQSettings object, and the generate and
+  check methods.
