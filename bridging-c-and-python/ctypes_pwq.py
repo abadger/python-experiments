@@ -45,7 +45,7 @@ def build_constants(header_file, output_file):
 
 
 def init_constants():
-    header_file = '/srv/git/libpwquality/libpwquality-1.4.0/src/pwquality.h'
+    header_file = 'pwquality.h'
     constants = retrieve_constants(header_file)
     global_vars = globals()
     for name, value in constants.items():
