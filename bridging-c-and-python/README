@@ -1,0 +1,3 @@
+I needed Python bindings for https://github.com/libpwquality/libpwquality that I could install via
+pip.  This started me down the path of looking at ctypes and cffi to see how those two could be used
+to write bindings for a C library.
