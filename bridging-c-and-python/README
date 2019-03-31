@@ -32,3 +32,7 @@ the first argument.
 * cffi_api_gen_pwq.py: Bindings written in the cffi api-out-of-line mode.  This generates c code,
   compiles it, and then imports the newly compiled extension module to talk to the library while
   providing a Pythonic API on top of those functions.
+* cffi_abi_gen_pwq.py: Bindings written in the cffi abi-out-of-line mode.  This generates a python
+  module and then imports the newly created module to talk to the library while providing a Pythonic
+  API on top of those functions.  The Python bindings created here can be used in a way that's
+  nearly identical to the cffi api-out-of-line mode.
