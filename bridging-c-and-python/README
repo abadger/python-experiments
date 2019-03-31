@@ -12,7 +12,22 @@ Files
   defining constants in the ctypes and cffi (ABI mode) bindings.  In production code, we'd want to
   find this on the system at build time and store the information into a python file which could be
   imported.
+* test_libpwquality.py:  pytest test suite to check that the cffi and ctypes bindings are compatible
+  with the upstream, extension module bindings.
+
+
+All the alternate bindings
+--------------------------
+These bindings cover PWQError, creating a PWQSettings object, and the generate and check methods.
+They copy API of the upstream pwquality bindings, meaning that PWQSettings is a context class with
+generate and check methods rather than the C-style of having functions which take the Settings as
+the first argument.
+
 * pwquality.c:  The current version of the bindings extracted from the upstream source.  This would
-  be built with the python distutils command for building extension modules
-* ctypes_pwq.py: Bindings that cover PWQError, creating a PWQSettings object, and the generate and
-  check methods.
+  be built with the python distutils command for building extension modules.  It's here as a
+  baseline for comparing the ctypes and cffi code.
+* ctypes_pwq.py: Bindings written in ctypes.  This dynamically gives python access to the C
+  functions.
+* cffi_api_gen_pwq.py: Bindings written in the cffi api-out-of-line mode.  This generates c code,
+  compiles it, and then imports the newly compiled extension module to talk to the library while
+  providing a Pythonic API on top of those functions.
