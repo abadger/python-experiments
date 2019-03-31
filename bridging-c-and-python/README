@@ -36,3 +36,6 @@ the first argument.
   module and then imports the newly created module to talk to the library while providing a Pythonic
   API on top of those functions.  The Python bindings created here can be used in a way that's
   nearly identical to the cffi api-out-of-line mode.
+* cffi_abi_pwq.py: Bindings written in the cffi abi-in-line mode.  This does not require write
+  access to the disk but it generates the bindings every single the module is loaded in a new
+  process.

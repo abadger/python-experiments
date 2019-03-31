@@ -4,6 +4,7 @@ import pytest
 import ctypes_pwq
 import cffi_api_gen_pwq
 import cffi_abi_gen_pwq
+import cffi_abi_pwq
 
 
 @pytest.fixture()
@@ -43,7 +44,7 @@ def test_generate(module, baseline_generate):
     assert len(baseline) >= len(module_password) - 1
 
 
-@pytest.mark.parametrize('module', [ctypes_pwq, cffi_api_gen_pwq, cffi_abi_gen_pwq])
+@pytest.mark.parametrize('module', [ctypes_pwq, cffi_abi_pwq, cffi_api_gen_pwq, cffi_abi_gen_pwq])
 @pytest.mark.parametrize('password', ['Thosdjkesd', 'Thosdjkesd%', 'Thosdjkesd%p~i l230-9'])
 def test_check_succeed(module, baseline_check, password):
     ctx = module.PWQSettings()
@@ -53,7 +54,7 @@ def test_check_succeed(module, baseline_check, password):
     assert baseline == module_score
 
 
-@pytest.mark.parametrize('module', [ctypes_pwq, cffi_api_gen_pwq, cffi_abi_gen_pwq])
+@pytest.mark.parametrize('module', [ctypes_pwq, cffi_abi_pwq, cffi_api_gen_pwq, cffi_abi_gen_pwq])
 @pytest.mark.parametrize('password', ['Thos', 'supercalifragilic', "pa's a s'ap"])
 def test_check_fail(module, baseline_check, password):
     ctx = module.PWQSettings()
