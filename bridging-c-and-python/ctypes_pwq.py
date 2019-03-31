@@ -21,6 +21,30 @@ import ctypes as ct
 import sys
 
 
+PY3 = False
+if sys.version_info >= (3,):
+    PY3 = True
+    unicode = str
+
+
+def to_bytes(obj, encoding='utf-8', errors='strict'):
+    if isinstance(obj, unicode):
+        return obj.encode(encoding, errors)
+    return obj
+
+
+def to_text(obj, encoding='utf-8', errors='strict'):
+    if isinstance(obj, bytes):
+        return obj.decode(encoding, errors)
+    return obj
+
+
+if PY3:
+    to_native = to_text
+else:
+    to_native = to_bytes
+
+
 def retrieve_constants(header_file):
     constants = {}
     with open(header_file, 'r') as hf:
@@ -81,29 +105,6 @@ except Exception:
 
 _LIBPWQ = init_libpwquality()
 
-PY3 = False
-if sys.version_info >= (3,):
-    PY3 = True
-    unicode = str
-
-
-def to_bytes(obj, encoding='utf-8', errors='strict'):
-    if isinstance(obj, unicode):
-        return obj.encode(encoding, errors)
-    return obj
-
-
-def to_text(obj, encoding='utf-8', errors='strict'):
-    if isinstance(obj, bytes):
-        return obj.decode(encoding, errors)
-    return obj
-
-
-if PY3:
-    to_native = to_text
-else:
-    to_native = to_bytes
-
 
 class PWQError(Exception):
     """
@@ -117,8 +118,8 @@ class PWQError(Exception):
             return MemoryError()
 
         buf = ct.create_string_buffer(b'\000' * PWQ_MAX_ERROR_MESSAGE_LEN)
-        _LIBPWQ.pwquality_strerror(buf, len(buf), rc, auxerror)
-        return PWQError(rc, to_native(buf.value))
+        msg = _LIBPWQ.pwquality_strerror(buf, len(buf), rc, auxerror)
+        return PWQError(rc, to_native(msg))
 
     def __repr__(self):
         return 'PWQError(%r, %r)' % (self.args[0], self.args[1])
@@ -171,7 +172,7 @@ class PWQSettings(object):
         if rc < 0:
             raise PWQError.from_pwq_rc(rc)
         p = ct.cast(password_ptr, ct.c_char_p)
-        return p.value
+        return to_native(p.value)
 
     def check(self, password, oldpassword=None, username=None):
         """
