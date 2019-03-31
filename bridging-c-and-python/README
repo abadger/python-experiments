@@ -13,7 +13,8 @@ Files
   find this on the system at build time and store the information into a python file which could be
   imported.
 * test_libpwquality.py:  pytest test suite to check that the cffi and ctypes bindings are compatible
-  with the upstream, extension module bindings.
+  with the upstream, extension module bindings.  ``pytest -v`` will check that the check and
+  generate functions do the same things as the upstream bindings do
 
 
 All the alternate bindings
