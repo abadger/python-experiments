@@ -22,6 +22,10 @@ import sys
 import cffi
 
 
+#
+# Helper functions
+#
+
 PY3 = False
 if sys.version_info >= (3,):
     PY3 = True
@@ -45,6 +49,11 @@ if PY3:
 else:
     to_native = to_bytes
 
+
+#
+# This code builds the extension.  It is done at runtime here but it could be used
+# When building and installing the package instead.  It generates a .c file and compiles it.
+#
 
 def build_extension():
     ffibuilder = cffi.FFI()
@@ -91,7 +100,11 @@ def build_extension():
 
     ffibuilder.compile(verbose=True)
 
+#
+# Pythonic-API layer
+#
 
+# Load the bindings or generate and compile the bindings and then load them
 try:
     import built_cffi_api_pwq as _LIBPWQ
 except Exception:
@@ -99,6 +112,8 @@ except Exception:
     import built_cffi_api_pwq as _LIBPWQ
 
 
+# Import the constants into the namespace here.  The upstream extension module makes the constants
+# available to calling python code so that's why we do this here.
 def import_constants():
     global_vars = globals()
     attributes = dir(_LIBPWQ.lib)
@@ -109,6 +124,10 @@ def import_constants():
 
 import_constants()
 
+
+#
+# The main portion of the bindings
+#
 
 class PWQError(Exception):
     """
@@ -156,9 +175,6 @@ class PWQSettings:
 
         :arg option: string with the name=value pair
         """
-        if rc in (PWQ_ERROR_UNKNOWN_SETTING, PWQ_ERROR_NON_INT_SETTING,
-                        PWQ_ERROR_NON_STR_SETTING):
-            raise AttributeError(rc, to_native(msg.value))
         pass
 
     def generate(self, entropy):

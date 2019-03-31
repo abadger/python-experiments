@@ -21,6 +21,10 @@ import ctypes as ct
 import sys
 
 
+#
+# Helper functions
+#
+
 PY3 = False
 if sys.version_info >= (3,):
     PY3 = True
@@ -44,6 +48,11 @@ if PY3:
 else:
     to_native = to_bytes
 
+
+#
+# Code to load the constants in from the header file
+# This could be done at package build and install time instead of at runtime
+#
 
 def retrieve_constants(header_file):
     constants = {}
@@ -76,6 +85,17 @@ def init_constants():
         global_vars[name] = value
 
 
+try:
+    from .constants import *
+except Exception:
+    init_constants()
+
+
+#
+# Metadata for the c functions.  ctypes has no facility to introspect the C API so we need
+# to tell it about the args and return types
+#
+
 LP_c_char = ct.POINTER(ct.c_char)  # Real char * [when we need char ** in a function)
 
 
@@ -98,13 +118,12 @@ def init_libpwquality():
     return libpwq
 
 
-try:
-    from .constants import *
-except Exception:
-    init_constants()
-
 _LIBPWQ = init_libpwquality()
 
+
+#
+# Establishing the Pythonic API for the bindings
+#
 
 class PWQError(Exception):
     """
@@ -154,9 +173,6 @@ class PWQSettings(object):
 
         :arg option: string with the name=value pair
         """
-        if rc in (PWQ_ERROR_UNKNOWN_SETTING, PWQ_ERROR_NON_INT_SETTING,
-                        PWQ_ERROR_NON_STR_SETTING):
-            raise AttributeError(rc, to_native(msg.value))
         pass
 
     def generate(self, entropy):
