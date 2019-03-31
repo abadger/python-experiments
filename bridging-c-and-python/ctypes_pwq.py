@@ -88,8 +88,6 @@ if sys.version_info >= (3,):
 
 
 def to_bytes(obj, encoding='utf-8', errors='strict'):
-    if isinstance(obj, bytes):
-        return
     if isinstance(obj, unicode):
         return obj.encode(encoding, errors)
     return obj
@@ -113,17 +111,14 @@ class PWQError(Exception):
 
     The exception value is always an integer error code and string description.
     """
-    def __init__(self, rc, msg):
-        pass
-
     @staticmethod
     def from_pwq_rc(rc, auxerror=None):
         if rc == PWQ_ERROR_MEM_ALLOC:
             return MemoryError()
 
         buf = ct.create_string_buffer(b'\000' * PWQ_MAX_ERROR_MESSAGE_LEN)
-        msg = _LIBPWQ.pwquality_strerror(buf, len(buf), rc, auxerror)
-        return PWQError(rc, to_native(msg))
+        _LIBPWQ.pwquality_strerror(buf, len(buf), rc, auxerror)
+        return PWQError(rc, to_native(buf.value))
 
     def __repr__(self):
         return 'PWQError(%r, %r)' % (self.args[0], self.args[1])
