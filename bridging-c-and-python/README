@@ -8,6 +8,10 @@ sense of how bindings written using the Python C-API, ctypes, and cffi compare t
 Files
 =====
 
+* pwquality.h: The current version of the libpwquality header file.  This is used as a data file for
+  defining constants in the ctypes and cffi (ABI mode) bindings.  In production code, we'd want to
+  find this on the system at build time and store the information into a python file which could be
+  imported.
 * pwquality.c:  The current version of the bindings extracted from the upstream source.  This would
   be built with the python distutils command for building extension modules
 * ctypes_pwq.py: Bindings that cover PWQError, creating a PWQSettings object, and the generate and
